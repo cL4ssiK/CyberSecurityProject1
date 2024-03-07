@@ -56,8 +56,8 @@ def show_registered(request):
     if request.method == 'POST':
         if request.POST['form1_id'] == 'log':
             return redirect('login')
-        #if request.POST['form2_id'] == 'front':
-        #    return redirect('')
+        if request.POST['form2_id'] == 'front':
+            return redirect('')
     return render(request, "regcomp.html")
 
 
@@ -65,5 +65,5 @@ def show_registered(request):
 def sign_out(request):
     logout(request)
     request.user = AnonymousUser()
-    return redirect('')
+    return redirect('home') # Use name parameter for redirect!
 

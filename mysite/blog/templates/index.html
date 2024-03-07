@@ -1,5 +1,14 @@
 <html>
     <body>
         <h1>Front page of super awesome web page</h1>
+
+        {% if user.is_authenticated %}
+        <h3>Logged in as {{username}}</h3>
+        <form action="/./blog/logout/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form3_id" value="front">
+            <button>Home page</button>
+        </form>
+        {% endif %}
     </body>
 </html>

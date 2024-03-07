@@ -6,5 +6,10 @@
             <input type="hidden" name="form1_id" value="log">
             <button>To Login</button>
         </form>
+        <form action="/./blog/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form2_id" value="front">
+            <button>Home page</button>
+        </form>
     </body>
 </html>
