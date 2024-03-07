@@ -1,0 +1,10 @@
+<html>
+    <body>
+        <h3>You registered successfully!</h3>
+        <form action="/./blog/login/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form1_id" value="log">
+            <button>To Login</button>
+        </form>
+    </body>
+</html>

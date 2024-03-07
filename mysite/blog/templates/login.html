@@ -1,0 +1,24 @@
+<html>
+    <body>
+        <h2>Log in</h2>
+        <form id="login" method="post">
+            {% csrf_token %}
+            <label>Username</label>
+            <input type="text" name="username">
+            <label>Password</label>
+            <input type="password" name="pwd">
+            <button type="submit">Login</button>
+        </form>
+        <form action="/./blog/register/" method="get">
+        
+            <button type="submit">Register</button>
+        </form>
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </body>
+</html>
