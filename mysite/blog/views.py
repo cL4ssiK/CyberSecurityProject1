@@ -4,13 +4,9 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .utils import own_authenticate
+from .models import Article
 from django.db import IntegrityError
 
-
-
-# Kokeilu
-def first_view(request):
-    return render(request=request, template_name='index.html')
 
 
 #Authenticate metodi ei toimi koska salasana ei ole hashattu.
@@ -67,3 +63,7 @@ def sign_out(request):
     request.user = AnonymousUser()
     return redirect('home') # Use name parameter for redirect!
 
+
+def show_article_titles(request):
+    titles = [article.title for article in Article.objects.all().order_by('date')]
+    return render(request, 'index.html', {'titles':titles})

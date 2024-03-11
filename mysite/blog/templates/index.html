@@ -1,7 +1,12 @@
 <html>
     <body>
         <h1>Front page of super awesome web page</h1>
-
+        <div>
+            {% for t in titles %}
+            <a href="#">{{t}}</a>
+            {% endfor %}
+        </div>
+        
         {% if user.is_authenticated %}
         <h3>Logged in as {{username}}</h3>
         <form action="/./blog/logout/" method="post">
