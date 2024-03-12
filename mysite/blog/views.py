@@ -6,28 +6,32 @@ from django.contrib import messages
 from .utils import own_authenticate
 from .models import Article
 from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
 
 
 
 #Authenticate metodi ei toimi koska salasana ei ole hashattu.
 #kirjoita oma authenticate metodi mikä hakee käyttäjän ja vertaa salasanoja palauttaen user objektin.
-def logged_user(request):
-    if (request.method == 'POST' and request.POST.get('username')):
-        username = request.POST['username']
-        password = request.POST['pwd']
-        us = own_authenticate(username=username, password=password)
-        # use this with fixed password hashing.
-        # us = authenticate(username=username, password=password)
-        if us is not None:
-            login(request, us)
-            return render(request, 'index.html', {'username' : us.username})
+def signin_view(request):
+    if request.method == 'POST':
+        if request.POST.get('username'):
+            username = request.POST['username']
+            password = request.POST['pwd']
+            user = own_authenticate(username=username, password=password)
+            # use this with fixed password hashing.
+            # user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request, "Incorrect account information!")
         else:
-            messages.error(request, "Incorrect account information!")
+            return redirect('login')
 
     return render(request=request, template_name='login.html')
 
 
-def signup(request):
+def signup_view(request):
     if (request.method == 'POST' and request.POST.get('username') and request.POST.get('pwd')):
         # This does not hash password and allows it to be retreived in clear text.
         # This possibly allows injection of sql queries as username. Needs to be sanitised.
@@ -58,6 +62,7 @@ def show_registered(request):
 
 
 # Performs logging out.
+#@login_required(login_url='...')
 def sign_out(request):
     logout(request)
     request.user = AnonymousUser()
@@ -66,4 +71,4 @@ def sign_out(request):
 
 def show_article_titles(request):
     titles = [article.title for article in Article.objects.all().order_by('date')]
-    return render(request, 'index.html', {'titles':titles})
+    return render(request, 'index.html', {'titles':titles, 'username':request.user.username})
