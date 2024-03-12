@@ -9,3 +9,7 @@ def own_authenticate(username, password):
     if user.password == password:
         return user
     return None
+
+
+def slugify(title):
+    return str(title).lower().replace(' ', '-')

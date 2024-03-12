@@ -1,0 +1,13 @@
+<html>
+    <body>
+        <h1>Create your articles here {{username}}!</h1>
+
+        <form action="/./blog/create/" method="post">
+            {% csrf_token %}
+            <input type="text" name="title">
+            <textarea name="article_body"></textarea>
+            <button>Publish</button>
+        </form>
+
+    </body>
+</html>

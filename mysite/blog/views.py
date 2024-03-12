@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .utils import own_authenticate
+from .utils import own_authenticate, slugify
 from .models import Article
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
@@ -62,7 +62,6 @@ def show_registered(request):
 
 
 # Performs logging out.
-#@login_required(login_url='...')
 def sign_out(request):
     logout(request)
     request.user = AnonymousUser()
@@ -72,3 +71,16 @@ def sign_out(request):
 def show_article_titles(request):
     titles = [article.title for article in Article.objects.all().order_by('date')]
     return render(request, 'index.html', {'titles':titles, 'username':request.user.username})
+
+
+@login_required(login_url='login')
+def create_article_view(request):
+    if request.method == 'POST':
+        # Some input sanitation should be done for title and body to prevent xss!
+        title = request.POST['title']
+        body = request.POST['article_body']
+        slug = slugify(title)
+        author = request.user
+        article = Article(title=title, body=body, slug=slug, author=author)
+        article.save()
+    return render(request, 'create_article.html', {'username':request.user.username})
