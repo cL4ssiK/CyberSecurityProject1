@@ -72,15 +72,22 @@ def show_article_titles(request):
     titles = [article.title for article in Article.objects.all().order_by('date')]
     return render(request, 'index.html', {'titles':titles, 'username':request.user.username})
 
-
+# Selvitä pystyykö julkasun yhteydessä laittaa scriptin tai rikkonaisen kuvan.
+# Jos ei voi, niin tee silleen että voi.
 @login_required(login_url='login')
 def create_article_view(request):
     if request.method == 'POST':
         # Some input sanitation should be done for title and body to prevent xss!
-        title = request.POST['title']
-        body = request.POST['article_body']
-        slug = slugify(title)
-        author = request.user
-        article = Article(title=title, body=body, slug=slug, author=author)
-        article.save()
-    return render(request, 'create_article.html', {'username':request.user.username})
+        try: # A bit dumb but works.
+            if request.POST['title'] != None or request.POST['title'] != '':
+                title = request.POST['title']
+                body = request.POST['article_body']
+                slug = slugify(title)
+                author = request.user
+                article = Article(title=title, body=body, slug=slug, author=author)
+                article.save()
+        except:
+            pass
+    user = request.user
+    articles = Article.objects.filter(author=user)
+    return render(request, 'create_article.html', {'username':request.user.username, 'articles':articles})

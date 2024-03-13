@@ -9,5 +9,12 @@
             <button>Publish</button>
         </form>
 
+        {% for article in articles %}
+        <div>
+            <h3>{{article.title}}</h3>
+            <p>{{article.body}}</p>
+            <h5>{{username}}</h5>
+        </div>
+        {% endfor %}
     </body>
 </html>

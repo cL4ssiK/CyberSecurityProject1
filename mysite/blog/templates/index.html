@@ -14,6 +14,11 @@
             <input type="hidden" name="form3_id" value="front">
             <button>Log out</button>
         </form>
+        <form action="/./blog/create/" method="post">
+            {% csrf_token %}
+            <input type="hidden">
+            <button>New article</button>
+        </form>
         {% else %}
         <form action="/./blog/login/" method="post">
             {% csrf_token %}
