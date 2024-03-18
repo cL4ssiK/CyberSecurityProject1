@@ -37,7 +37,7 @@ def signup_view(request):
         # This possibly allows injection of sql queries as username. Needs to be sanitised.
         user = User(username=request.POST['username'], password=request.POST['pwd']) # Create user object.
         # Under is properly hashed password.
-        #user = User.objects.create_user(request.POST['username'], request.POST['pwd'])
+        # user = User.objects.create_user(request.POST['username'], request.POST['pwd'])
         
         try: # If username is taken exception is raised.
             user.save() # Create new row for user object into database
@@ -69,8 +69,12 @@ def sign_out(request):
 
 
 def show_article_titles(request):
-    titles = [article.title for article in Article.objects.all().order_by('date')]
-    return render(request, 'index.html', {'titles':titles, 'username':request.user.username})
+    articles = Article.objects.all().order_by('date')
+    return render(request, 'index.html', {'articles':articles, 'username':request.user.username})
+
+def show_article_details(request, slug):
+    article = Article.objects.get(slug=slug)
+    return render(request, 'article_detail.html', {'article': article})
 
 # Selvitä pystyykö julkasun yhteydessä laittaa scriptin tai rikkonaisen kuvan.
 # Jos ei voi, niin tee silleen että voi.

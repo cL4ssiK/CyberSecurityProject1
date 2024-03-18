@@ -10,6 +10,6 @@ def own_authenticate(username, password):
         return user
     return None
 
-
+# TODO remove everything but letters, numbers, -, _
 def slugify(title):
     return str(title).lower().replace(' ', '-')

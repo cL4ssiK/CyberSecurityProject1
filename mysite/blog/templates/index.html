@@ -2,8 +2,10 @@
     <body>
         <h1>Front page of super awesome web page</h1>
         <div>
-            {% for t in titles %}
-            <a href="#">{{t}}</a>
+            {% for a in articles %}
+            <div>
+                <a href="{% url 'article_details' a.slug %}">{{a.title}}</a>
+            </div>
             {% endfor %}
         </div>
         

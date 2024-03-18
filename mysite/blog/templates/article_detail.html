@@ -1,0 +1,23 @@
+<html>
+    <body>
+        <div class="title">
+            {{article.title}}
+        </div>
+        <div class="article_body">
+            <p>
+                {{article.body}}
+            </p>
+        </div>
+        <div class="author">
+            - {{article.author.username}}
+        </div>
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'article_details' article.slug %}" method="post">
+            {% csrf_token %}
+            <input type="hidden">
+            <button>Edit</button>
+        </form>
+        {% endif %}
+    </body>
+</html>
