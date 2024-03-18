@@ -7,6 +7,8 @@ from .utils import own_authenticate, slugify
 from .models import Article
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
 
 
 
@@ -72,9 +74,29 @@ def show_article_titles(request):
     articles = Article.objects.all().order_by('date')
     return render(request, 'index.html', {'articles':articles, 'username':request.user.username})
 
+# Shows details of an article
 def show_article_details(request, slug):
+    if request.method == 'POST':
+        # If edit button is pressed, redirect to editing url and take slug with redirect.
+        return redirect(reverse('article_edit', kwargs={'slug': slug}))
     article = Article.objects.get(slug=slug)
     return render(request, 'article_detail.html', {'article': article})
+
+# Opens editing window.
+# Horisontal access elevation here
+def show_article_edit(request, slug):
+    # Retreives article from database that matches slug.
+    article = Article.objects.get(slug=slug)
+    if request.method == 'POST':
+        # If method is post then save changes made to article.
+        article.title = request.POST['title']
+        article.body = request.POST['article_body']
+        article.slug = slugify(article.title)
+        article.save()
+        # redirect to article detail page and take slug with redirect.
+        return redirect(reverse('article_details', kwargs={'slug': article.slug}))
+    return render(request, 'article_edit.html', {'article': article})
+
 
 # Selvitä pystyykö julkasun yhteydessä laittaa scriptin tai rikkonaisen kuvan.
 # Jos ei voi, niin tee silleen että voi.

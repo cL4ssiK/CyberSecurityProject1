@@ -9,5 +9,6 @@ urlpatterns = [
     path('registered/', views.show_registered, name='registered'),
     path('logout/', views.sign_out, name='logout'),
     path('create/', views.create_article_view, name='create'),
+    re_path(r'^(?P<slug>[\w-]+)/edit/$', views.show_article_edit, name='article_edit'),
     re_path(r'^(?P<slug>[\w-]+)/$', views.show_article_details, name='article_details')
 ]
