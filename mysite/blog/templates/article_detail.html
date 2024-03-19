@@ -13,11 +13,13 @@
         </div>
 
         {% if user.is_authenticated %}
+        {% if user.username == article.author.username %}
         <form action="{% url 'article_details' article.slug %}" method="post">
             {% csrf_token %}
             <input type="hidden">
             <button>Edit</button>
         </form>
+        {% endif %}
         {% endif %}
     </body>
 </html>
