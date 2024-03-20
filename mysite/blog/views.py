@@ -79,7 +79,6 @@ def signup_view(request):
     if (request.method == 'POST' and request.POST.get('username') and request.POST.get('pwd')):
         
         # This does not hash password and allows it to be retreived in clear text.
-        # This possibly allows injection of sql queries as username. Needs to be sanitised.
         user = User(username=request.POST['username'], password=request.POST['pwd']) # Create user object.
         """
         Under is properly hashed password to fix issue of retreiving passwords.
@@ -168,7 +167,7 @@ def show_article_titles(request):
     HttpResponse
         Renders index.html.
     """
-    articles = Article.objects.all().order_by('date')
+    articles = Article.objects.all().order_by('date') # table name is blog_article
 
     return render(request, 'index.html', {'articles':articles, 'username':request.user.username})
 
@@ -191,7 +190,16 @@ def show_article_details(request, slug):
     HttpResponse
         if method is POST redirects to article_edit url.
     """
+
+    # This is unsafe query where input is not sanitized. If slug parameter is modified externally injecting query is possible.
+    query = "SELECT * FROM blog_article WHERE slug='" + slug + "'"
+    articles = list(Article.objects.raw(query))[:1]
+    article = articles[0]
+    """
+    To fix this issue use djangos inbuild querysets. Those sanitize input automatically.
+
     article = Article.objects.get(slug=slug)
+    """
 
     if request.method == 'POST':
         """
