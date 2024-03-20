@@ -12,6 +12,23 @@ from django.urls import reverse
 
 
 def signin_view(request):
+    """Handles requests sent to sign in url (login/).
+    Logs user in if correct information is given.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+
+    Returns
+    -------
+    HttpResponse
+        if method is GET renders login.html
+    HttpResponse
+        if method is POST and authentication is successful redirects to home page.
+    HttpResponse
+        if method is POST and authentication is unsuccessful reloads login page.
+    """
 
     if request.method == 'POST':
 
@@ -40,8 +57,24 @@ def signin_view(request):
     return render(request=request, template_name='login.html')
 
 
-
 def signup_view(request):
+    """Handles requests sent to registering url (register/).
+    Creates new user object and saves it into database if information given is correct.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+
+    Returns
+    -------
+    HttpResponse
+        if method is GET renders register.html
+    HttpResponse
+        if method is POST and saving user is successful redirects to registering confirmed page.
+    HttpResponse
+        if method is POST and saving user is unsuccessful re renders registering page.
+    """
 
     if (request.method == 'POST' and request.POST.get('username') and request.POST.get('pwd')):
         
@@ -69,8 +102,24 @@ def signup_view(request):
     return render(request, 'register.html')
 
 
-
 def show_registered(request):
+    """Handles requests sent to registering confirmation url (registered/).
+    Gives options to redirect into differend pages after registering new User.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+
+    Returns
+    -------
+    HttpResponse
+        if method is GET renders regcomp.html
+    HttpResponse
+        if method is POST and form1_id equals log redirects to login url.
+    HttpResponse
+        if method is POST and form2_id equals front redirects to home url.
+    """
 
     if request.method == 'POST':
 
@@ -83,8 +132,20 @@ def show_registered(request):
     return render(request, "regcomp.html")
 
 
-# Performs logging out.
 def sign_out(request):
+    """Handles requests sent to log out url (logout/).
+    Performs logging out and redirects to home page.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+
+    Returns
+    -------
+    HttpResponse
+        Redirects to home url.
+    """
 
     logout(request)
 
@@ -93,17 +154,43 @@ def sign_out(request):
     return redirect('home') # Use name parameter for redirect!
 
 
-
 def show_article_titles(request):
+    """Handles requests sent to home page url (/).
+    Performs loading index.html and retreiving articles from database.
 
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+
+    Returns
+    -------
+    HttpResponse
+        Renders index.html.
+    """
     articles = Article.objects.all().order_by('date')
 
     return render(request, 'index.html', {'articles':articles, 'username':request.user.username})
 
 
-# Shows details of an article
 def show_article_details(request, slug):
+    """Handles requests sent to custom articles url (r'^(?P<slug>[\w-]+)/$').
+    Renders page that shows full article and gives option for redirecting.
 
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+    slug : str
+        Slug attribute from article that is wanted to be shown.
+
+    Returns
+    -------
+    HttpResponse
+        if method is GET renders article_detail.html
+    HttpResponse
+        if method is POST redirects to article_edit url.
+    """
     article = Article.objects.get(slug=slug)
 
     if request.method == 'POST':
@@ -120,11 +207,27 @@ def show_article_details(request, slug):
     return render(request, 'article_detail.html', {'article': article})
 
 
-# Opens editing window.
 # Horisontal access elevation here and possibly vertical as well.
 # @login_required(login_url='login') This fixes vertical elevation.
 def show_article_edit(request, slug):
-    
+    """Handles requests sent to custom articles editing url (r'^(?P<slug>[\w-]+)/edit/$').
+    Renders page that shows article fields in text areas and gives option for redirecting.
+    Saves changes made into article into database.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+    slug : str
+        Slug attribute from article that is wanted to be shown.
+
+    Returns
+    -------
+    HttpResponse
+        if method is GET renders article_edit.html
+    HttpResponse
+        if method is POST redirects to article_details url.
+    """
     # Retreives article from database that matches slug.
     article = Article.objects.get(slug=slug)
     """
@@ -148,11 +251,22 @@ def show_article_edit(request, slug):
     return render(request, 'article_edit.html', {'article': article})
 
 
-# Selvitä pystyykö julkasun yhteydessä laittaa scriptin tai rikkonaisen kuvan.
-# Jos ei voi, niin tee silleen että voi.
 @login_required(login_url='login')
 def create_article_view(request):
+    """Handles requests sent to articles creating url (create/).
+    Renders page that shows article fields in text areas and gives option for redirecting.
+    Creates new Article object and saves it into database.
 
+    Parameters
+    ----------
+    request : HttpRequest
+        Includes all request information.
+
+    Returns
+    -------
+    HttpResponse
+        Renders create_article.html
+    """
     if request.method == 'POST':
 
         # Some input sanitation should be done for title and body to prevent xss!
