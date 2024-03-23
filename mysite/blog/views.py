@@ -9,6 +9,7 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from django.contrib.auth.forms import UserCreationForm
 
 
 @csrf_exempt #with this annotation post request can be made w/o csrf token. Fixed by removing this and adding token to html.
@@ -55,7 +56,7 @@ def signin_view(request):
         else:
             return redirect('login')
 
-    return render(request=request, template_name='login.html')
+    return render(request, 'login.html')
 
 
 def signup_view(request):
@@ -98,7 +99,20 @@ def signup_view(request):
         return redirect('registered') #Loads confirmation page
     else:
         messages.error(request, "Invalid inputs!")
+    """
+    With this execution of sign up method we can use djangos password validators automatically.
+    This way password is hashed properly. Using this form also fixes problem above.
 
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('registered')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
+    """
+    
     return render(request, 'register.html')
 
 
