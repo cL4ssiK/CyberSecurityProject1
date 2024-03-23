@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+import re
 
 
 def own_authenticate(username, password):
@@ -32,7 +33,6 @@ def own_authenticate(username, password):
     return None
 
 
-# TODO remove everything but letters, numbers, -, _
 def slugify(title):
     """Method that creates slug friendly string out of string.
 
@@ -46,5 +46,6 @@ def slugify(title):
     str
         Modified slug.
     """
-
-    return str(title).lower().replace(' ', '-')
+    pattern = re.compile('[^{}]'.format(re.escape("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ ")))
+    cleaned = re.sub(pattern, '', title)
+    return str(cleaned).lower().replace(' ', '-')

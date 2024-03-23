@@ -7,10 +7,11 @@ from .utils import own_authenticate, slugify
 from .models import Article
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 
 
-
+@csrf_exempt #with this annotation post request can be made w/o csrf token. Fixed by removing this and adding token to html.
 def signin_view(request):
     """Handles requests sent to sign in url (login/).
     Logs user in if correct information is given.
