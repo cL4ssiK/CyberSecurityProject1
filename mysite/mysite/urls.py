@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    
+    # Remove admin page url from final product.
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls'))
 ]

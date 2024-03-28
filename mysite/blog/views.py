@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -9,7 +8,7 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from django.contrib.auth.forms import UserCreationForm
+#from django.contrib.auth.forms import UserCreationForm
 
 
 @csrf_exempt #with this annotation post request can be made w/o csrf token. Fixed by removing this and adding token to html.
@@ -78,7 +77,7 @@ def signup_view(request):
         if method is POST and saving user is unsuccessful re renders registering page.
     """
 
-    if (request.method == 'POST' and request.POST.get('username') and request.POST.get('pwd')):
+    if request.method == 'POST' and request.POST.get('username') and request.POST.get('pwd'):
         
         # This does not hash password and allows it to be retreived in clear text.
         user = User(username=request.POST['username'], password=request.POST['pwd']) # Create user object.

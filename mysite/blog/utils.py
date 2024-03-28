@@ -26,7 +26,7 @@ def own_authenticate(username, password):
 
     except User.DoesNotExist:
         return None
-    
+
     if user.password == password:
         return user
     
