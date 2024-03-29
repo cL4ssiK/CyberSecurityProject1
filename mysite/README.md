@@ -9,7 +9,7 @@
     python manage.py runserver
 ```
 
-There is 3 accounts present in the application by default.
+There are 3 accounts present in the application by default.
 ```
 user1 - 123
 user2 - 123
